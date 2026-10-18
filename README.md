@@ -13,7 +13,15 @@ A two-player reverse-audio imitation game.
 docker compose up --build
 ```
 
-Open http://localhost:8080 (or http://YOUR-LAN-IP:8080 from another device). For microphone access on a different device, browsers generally require HTTPS or localhost. Use an HTTPS reverse proxy for remote access.
+Open http://localhost:3001 (or http://YOUR-LAN-IP:3001 from another device). For microphone access on a different device, browsers generally require HTTPS or localhost. Use an HTTPS reverse proxy for remote access.
+
+The default host port is `3001`. To inject a different host port when starting Docker Compose:
+
+```bash
+APP_PORT=3001 docker compose up -d
+```
+
+Replace `3001` with any available host port and use that port in the URL. The container continues to listen on port `3001`.
 
 ## Development
 
