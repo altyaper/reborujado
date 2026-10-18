@@ -30,7 +30,7 @@ app.post('/api/reverse', upload.single('audio'), async (req, res) => {
   }
 });
 app.use(express.static('public'));
-app.get('/{*path}', (req, res) => res.sendFile(join(process.cwd(), 'public', 'index.html')));
+app.get('*', (req, res) => res.sendFile(join(process.cwd(), 'public', 'index.html')));
 app.use((error, req, res, next) => {
   if (error instanceof multer.MulterError) return res.status(413).json({ error: 'Recording too large' });
   res.status(500).json({ error: 'Unexpected server error' });
