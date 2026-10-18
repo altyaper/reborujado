@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import AudioPlayer, { pauseAudioPlayers } from './AudioPlayer.jsx';
 import './style.css';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
   }, []);
 
   async function begin() {
+    pauseAudioPlayers();
     setError('');
     try {
       const media = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -75,9 +77,9 @@ function App() {
     <section className="panel">
       <div className="steps"><span className={stage === 0 ? 'active' : ''}>1 · Original</span><span className={stage === 1 || stage === 2 ? 'active' : ''}>2 · Imitate</span><span className={stage === 3 ? 'active' : ''}>3 · Reveal</span></div>
       {stage === 0 && <><h2>Player 1: Say something!</h2><p>Record a word or short phrase. You have 10 seconds.</p></>}
-      {stage === 1 && <><h2>Listen to the reversed sound</h2><p>Player 2, listen carefully and try to copy it exactly.</p><audio controls src={audio[0]}/><button onClick={() => setStage(2)}>I'm ready to imitate →</button></>}
-      {stage === 2 && <><h2>Player 2: Copy the sound!</h2><p>Record your best imitation of what you just heard.</p><audio controls src={audio[0]}/></>}
-      {stage === 3 && <><h2>The big reveal!</h2><p>Here's Player 2's imitation reversed. Does it sound like the original?</p><audio controls src={audio[1]}/><p>Compare it with Player 1's reversed sound:</p><audio controls src={audio[0]}/><button onClick={reset}>↻ Play again</button></>}
+      {stage === 1 && <><h2>Listen to the reversed sound</h2><p>Player 2, listen carefully and try to copy it exactly.</p><AudioPlayer src={audio[0]} label="The backwards clue" caption="PLAYER 1 · REVERSED"/><button onClick={() => setStage(2)}>I'm ready to imitate →</button></>}
+      {stage === 2 && <><h2>Player 2: Copy the sound!</h2><p>Record your best imitation of what you just heard.</p><AudioPlayer src={audio[0]} label="The backwards clue" caption="PLAYER 1 · REVERSED" disabled={recording || busy}/></>}
+      {stage === 3 && <><h2>The big reveal!</h2><p>Here's Player 2's imitation reversed. Does it sound like the original?</p><AudioPlayer src={audio[1]} label="The big reveal" caption="PLAYER 2 · REVERSED"/><p>Compare it with Player 1's reversed sound:</p><AudioPlayer src={audio[0]} label="The backwards clue" caption="PLAYER 1 · REVERSED"/><button onClick={reset}>↻ Play again</button></>}
       {(stage === 0 || stage === 2) && <><div className="countdown">{recording ? seconds + 's' : '🎙️'}</div><button disabled={busy} onClick={recording ? stop : begin}>{busy ? 'Reversing audio…' : recording ? '■ Stop recording' : '● Start recording'}</button></>}
       {error && <p className="error" role="alert">{error}</p>}
     </section>
@@ -85,3 +87,4 @@ function App() {
   </main>;
 }
 createRoot(document.getElementById('root')).render(<App/>);
+
