@@ -1,0 +1,6 @@
+services:
+  reborujado:
+    build: .
+    ports:
+      - "8080:3001"
+    restart: unless-stopped
